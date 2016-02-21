@@ -24,6 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name="com.springweather.app.activity.WeatherActivity" ></activity>
+        <service android:name="com.springweather.app.service.AutoUpdateService" ></service>
+        <receiver android:name="com.springweather.app.receiver.AutoUpdateReceiver" ></receiver>
     </application>
 
 </manifest>
