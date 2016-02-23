@@ -1,16 +1,12 @@
 # SpringWeather
 
-####一个简单的Android天气应用，实现了TranslucnetSystemBar特效，兼容了Android6.0,5.0,4.4等版本
+####一个简单的Android天气应用，实现了TranslucnetSystemBar特效，兼容了Android6.0、5.0、4.4等版本
 ----------------
 ###下面主要介绍下TranslucnetSystemBar的实现过程：
  - New一个BaseActivity作为基类实现android.support.v7.app.AppCompatActivity兼容包，因为透明栏需要v7包兼容，所有Activity都需要extends这个基类，才能实现透明栏效果，另外‘onCreate()’方法中‘supportRequestWindowFeature(Window.FEATURE_NO_TITLE)’实现取消系统标题栏，这里不需要系统标题栏，我们自己在布局文件中设置就好，代码如下：
 
-    package com.springweather.app.activity;
-    
-    import android.os.Bundle;
-    import android.support.v7.app.AppCompatActivity;
-    import android.view.Window;
-    
+
+
     public class BaseActivity extends AppCompatActivity {
     	
     	@Override
