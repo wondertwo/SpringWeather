@@ -4,42 +4,22 @@
 ----------------
 ###下面主要介绍下TranslucnetSystemBar的实现过程：
  - New一个BaseActivity作为基类实现android.support.v7.app.AppCompatActivity兼容包，因为透明栏需要v7包兼容，所有Activity都需要extends这个基类，才能实现透明栏效果，另外‘onCreate()’方法中‘supportRequestWindowFeature(Window.FEATURE_NO_TITLE)’实现取消系统标题栏，这里不需要系统标题栏，我们自己在布局文件中设置就好，代码如下：
- 
 
-
-
-
+    package com.springweather.app.activity;
     
-
-package com.springweather.app.activity;
-
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
-/**
- * BaseActivity作为基类，可以被后面所有要实现透明状态栏的Activity都要extends基类
- * 原因是，要实现透明状态栏的特性，需要import android.support.v7.app.AppCompatActivity包，
- * 而BaseActivity作为android.support.v7.app.AppCompatActivity的实现类，
- * 通过supportRequestWindowFeature(Window.FEATURE_NO_TITLE)实现取消系统标题栏
- * 
- * @author Allenieo
- *
- */
-public class BaseActivity extends AppCompatActivity {
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		/**
-		 * 取消系统的标题栏
-		 */
-		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-	}
-
-}
-
-
-
+    import android.os.Bundle;
+    import android.support.v7.app.AppCompatActivity;
+    import android.view.Window;
+    
+    public class BaseActivity extends AppCompatActivity {
+    	
+    	@Override
+    	protected void onCreate(Bundle savedInstanceState) {
+    		super.onCreate(savedInstanceState);
+    		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+    	}
+    
+    }
 
 - 设置所有Activity的布局文件，在根布局的加入'android:background="#484e61"'和'android:fitsSystemWindows="true"'标签，background属性值需要和标题布局保持一致，即为#484e61，fifsSyatemWindows属性设为true,保证整个View不会上移与系统状态栏重合。
 - 为了适配不同版本，在'res'目录下分别创建'values-v19'和'values-v21'这两个文件夹，分别创建'styles.xml'文件，设置一下下面这四个属性：
