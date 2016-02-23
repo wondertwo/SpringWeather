@@ -1,9 +1,5 @@
 package com.springweather.app.activity;
 
-// import net.youmi.android.banner.AdSize;
-// import net.youmi.android.banner.AdView;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,7 +17,7 @@ import com.springweather.app.util.HttpCallbackListener;
 import com.springweather.app.util.HttpUtil;
 import com.springweather.app.util.Utility;
 
-public class WeatherActivity extends Activity implements OnClickListener{
+public class WeatherActivity extends BaseActivity implements OnClickListener {
 
 	private LinearLayout weatherInfoLayout;
 	/**
@@ -57,13 +52,14 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	 * 更新天气按钮
 	 */
 	private Button refreshWeather;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.weather_layout);
-		// 初始化各控件
+		/**
+		 *  初始化各控件
+		 */
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		publishText = (TextView) findViewById(R.id.publish_text);
@@ -75,25 +71,23 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
 		String countyCode = getIntent().getStringExtra("county_code");
 		if (!TextUtils.isEmpty(countyCode)) {
-			// 有县级代号时就去查询天气
+			/**
+			 *  有县级代号时就去查询天气
+			 */
 			publishText.setText("同步中...");
 			weatherInfoLayout.setVisibility(View.INVISIBLE);
 			cityNameText.setVisibility(View.INVISIBLE);
 			queryWeatherCode(countyCode);
 		} else {
-			// 没有县级代号时就直接显示本地天气
+			/**
+			 * 没有县级代号时就直接显示本地天气
+			 */
 			showWeather();
 		}
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
-		// //实例化广告条
-		// AdView adView = new AdView(this, AdSize.FIT_SCREEN);
-		// //获取要嵌入广告条的布局
-		// LinearLayout adLayout=(LinearLayout)findViewById(R.id.adLayout);
-		// //将广告条加入到布局中
-		// adLayout.addView(adView);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -115,7 +109,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			break;
 		}
 	}
-	
+
 	/**
 	 * 查询县级代号所对应的天气代号。
 	 */
@@ -131,7 +125,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
 		queryFromServer(address, "weatherCode");
 	}
-	
+
 	/**
 	 * 根据传入的地址和类型去向服务器查询天气代号或者天气信息。
 	 */
@@ -141,7 +135,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			public void onFinish(final String response) {
 				if ("countyCode".equals(type)) {
 					if (!TextUtils.isEmpty(response)) {
-						// 从服务器返回的数据中解析出天气代号
+						/**
+						 *  从服务器返回的数据中解析出天气代号
+						 */
 						String[] array = response.split("\\|");
 						if (array != null && array.length == 2) {
 							String weatherCode = array[1];
@@ -149,7 +145,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 						}
 					}
 				} else if ("weatherCode".equals(type)) {
-					// 处理服务器返回的天气信息
+					/**
+					 *  处理服务器返回的天气信息
+					 */
 					Utility.handleWeatherResponse(WeatherActivity.this, response);
 					runOnUiThread(new Runnable() {
 						@Override
@@ -159,7 +157,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 					});
 				}
 			}
-			
+
 			@Override
 			public void onError(Exception e) {
 				runOnUiThread(new Runnable() {
@@ -171,13 +169,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			}
 		});
 	}
-	
+
 	/**
 	 * 从SharedPreferences文件中读取存储的天气信息，并显示到界面上。
 	 */
 	private void showWeather() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		cityNameText.setText( prefs.getString("city_name", ""));
+		cityNameText.setText(prefs.getString("city_name", ""));
 		temp1Text.setText(prefs.getString("temp1", ""));
 		temp2Text.setText(prefs.getString("temp2", ""));
 		weatherDespText.setText(prefs.getString("weather_desp", ""));

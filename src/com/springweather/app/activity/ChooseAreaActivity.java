@@ -3,8 +3,6 @@ package com.springweather.app.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-// import net.youmi.android.AdManager;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -29,12 +26,12 @@ import com.springweather.app.util.HttpCallbackListener;
 import com.springweather.app.util.HttpUtil;
 import com.springweather.app.util.Utility;
 
-public class ChooseAreaActivity extends Activity {
+public class ChooseAreaActivity extends BaseActivity {
 
 	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
 	public static final int LEVEL_COUNTY = 2;
-	
+
 	private ProgressDialog progressDialog;
 	private TextView titleText;
 	private ListView listView;
@@ -73,7 +70,6 @@ public class ChooseAreaActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// AdManager.getInstance(this).init("cf9c2a749cd97145","289874826c698edd", false);
 		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity) {
@@ -82,7 +78,6 @@ public class ChooseAreaActivity extends Activity {
 			finish();
 			return;
 		}
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		listView = (ListView) findViewById(R.id.list_view);
 		titleText = (TextView) findViewById(R.id.title_text);
@@ -91,8 +86,7 @@ public class ChooseAreaActivity extends Activity {
 		springWeatherDB = SpringWeatherDB.getInstance(this);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int index,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
 				if (currentLevel == LEVEL_PROVINCE) {
 					selectedProvince = provinceList.get(index);
 					queryCities();
@@ -108,7 +102,10 @@ public class ChooseAreaActivity extends Activity {
 				}
 			}
 		});
-		queryProvinces();  // 加载省级数据
+		/**
+		 *  加载省级数据
+		 */
+		queryProvinces();
 	}
 
 	/**
@@ -148,7 +145,7 @@ public class ChooseAreaActivity extends Activity {
 			queryFromServer(selectedProvince.getProvinceCode(), "city");
 		}
 	}
-	
+
 	/**
 	 * 查询选中市内所有的县，优先从数据库查询，如果没有查询到再去服务器上查询。
 	 */
@@ -167,7 +164,7 @@ public class ChooseAreaActivity extends Activity {
 			queryFromServer(selectedCity.getCityCode(), "county");
 		}
 	}
-	
+
 	/**
 	 * 根据传入的代号和类型从服务器上查询省市县数据。
 	 */
@@ -184,17 +181,16 @@ public class ChooseAreaActivity extends Activity {
 			public void onFinish(String response) {
 				boolean result = false;
 				if ("province".equals(type)) {
-					result = Utility.handleProvincesResponse(springWeatherDB,
-							response);
+					result = Utility.handleProvincesResponse(springWeatherDB, response);
 				} else if ("city".equals(type)) {
-					result = Utility.handleCitiesResponse(springWeatherDB,
-							response, selectedProvince.getId());
+					result = Utility.handleCitiesResponse(springWeatherDB, response, selectedProvince.getId());
 				} else if ("county".equals(type)) {
-					result = Utility.handleCountiesResponse(springWeatherDB,
-							response, selectedCity.getId());
+					result = Utility.handleCountiesResponse(springWeatherDB, response, selectedCity.getId());
 				}
 				if (result) {
-					// 通过runOnUiThread()方法回到主线程处理逻辑
+					/**
+					 *  通过runOnUiThread()方法回到主线程处理逻辑
+					 */
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -213,19 +209,20 @@ public class ChooseAreaActivity extends Activity {
 
 			@Override
 			public void onError(Exception e) {
-				// 通过runOnUiThread()方法回到主线程处理逻辑
+				/**
+				 *  通过runOnUiThread()方法回到主线程处理逻辑
+				 */
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						closeProgressDialog();
-						Toast.makeText(ChooseAreaActivity.this,
-										"加载失败", Toast.LENGTH_SHORT).show();
+						Toast.makeText(ChooseAreaActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
 					}
 				});
 			}
 		});
 	}
-	
+
 	/**
 	 * 显示进度对话框
 	 */
@@ -237,7 +234,7 @@ public class ChooseAreaActivity extends Activity {
 		}
 		progressDialog.show();
 	}
-	
+
 	/**
 	 * 关闭进度对话框
 	 */
@@ -246,7 +243,7 @@ public class ChooseAreaActivity extends Activity {
 			progressDialog.dismiss();
 		}
 	}
-	
+
 	/**
 	 * 捕获Back按键，根据当前的级别来判断，此时应该返回市列表、省列表、还是直接退出。
 	 */

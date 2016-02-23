@@ -2,11 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#484e61"
+    android:fitsSystemWindows="true"
     android:orientation="vertical" >
+    <!-- 
+    	在上面的根布局，设置background,fifsSyatemWindoes属性
+    	background属性值需要和标题布局保持一致，即为#484e61
+    	fifsSyatemWindows属性设为true,保证整个View不会上移与系统状态栏重合
+     -->
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:background="#484e61" >
         
         <Button
@@ -31,7 +38,7 @@
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/refresh" />
     </RelativeLayout>
 
@@ -39,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#27a5f9" >
+        android:background="#20b2aa" >
 
         <TextView
             android:id="@+id/publish_text"
@@ -62,6 +69,7 @@
                 android:id="@+id/current_date"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="#fff"
                 android:textSize="18sp" />
